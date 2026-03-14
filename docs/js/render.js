@@ -45,6 +45,21 @@ export function renderAddSongForm() {
       </div>
 
       <div class="detail-field">
+        <span class="detail-label">制作者</span><br />
+        <input type="text" name="producer_names" class="input" />
+      </div>
+
+      <div class="detail-field">
+        <span class="detail-label">関連作品</span><br />
+        <input type="text" name="media_names" class="input" />
+      </div>
+
+      <div class="detail-field">
+        <span class="detail-label">カテゴリー</span><br />
+        <input type="text" name="genre_names" class="input" />
+      </div>
+
+      <div class="detail-field">
         <span class="detail-label">YouTube Links(歌唱者)</span><br />
         <input
           type="text"
@@ -72,36 +87,6 @@ export function renderAddSongForm() {
           class="input"
           placeholder="例: BVxxxx..., BVyyyy..."
         />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">制作者</span><br />
-        <input type="text" name="producer_names" class="input" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">関連作品</span><br />
-        <input type="text" name="media_names" class="input" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">カテゴリー</span><br />
-        <input type="text" name="genre_names" class="input" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">YouTube Link</span><br />
-        <input type="text" name="artist_yt" class="input" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">Niconico Link</span><br />
-        <input type="text" name="artist_nico" class="input" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">Bilibili Link</span><br />
-        <input type="text" name="artist_bili" class="input" />
       </div>
 
       <div class="detail-actions">
@@ -343,6 +328,21 @@ export function renderEditSongForm(song) {
       </div>
 
       <div class="detail-field">
+        <span class="detail-label">制作者</span><br />
+        <input type="text" name="producer_names" class="input" value="${producerText}" />
+      </div>
+
+      <div class="detail-field">
+        <span class="detail-label">関連作品</span><br />
+        <input type="text" name="media_names" class="input" value="${mediaText}" />
+      </div>
+
+      <div class="detail-field">
+        <span class="detail-label">カテゴリー</span><br />
+        <input type="text" name="genre_names" class="input" value="${genreText}" />
+      </div>
+
+      <div class="detail-field">
         <span class="detail-label">YouTube Links(歌唱者)</span><br />
         <input
           type="text"
@@ -373,36 +373,6 @@ export function renderEditSongForm(song) {
           placeholder="例: BVxxxx..., BVyyyy..."
           value="${artistBiliText}"
         />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">制作者</span><br />
-        <input type="text" name="producer_names" class="input" value="${producerText}" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">関連作品</span><br />
-        <input type="text" name="media_names" class="input" value="${mediaText}" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">カテゴリー</span><br />
-        <input type="text" name="genre_names" class="input" value="${genreText}" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">YouTube Link</span><br />
-        <input type="text" name="yt_link" class="input" value="${yt}" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">Niconico Link</span><br />
-        <input type="text" name="nico_link" class="input" value="${nico}" />
-      </div>
-
-      <div class="detail-field">
-        <span class="detail-label">Bilibili Link</span><br />
-        <input type="text" name="bili_link" class="input" value="${bili}" />
       </div>
 
       <div class="detail-section-title" style="margin-top:16px;">Covers</div>
