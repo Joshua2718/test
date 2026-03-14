@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Re:Sound</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="ReSound.css" />
+</head>
+<body>
+  <div id="page-bg"></div>
+  <div class="app-shell">
+    <header>
+      <div class="tabs-left">
+        <button class="tab-btn active" data-tab="table">一覧</button>
+        <button class="tab-btn" data-tab="stats">統計</button>
+        <button class="tab-btn" data-tab="tags">タグ</button>
+        <button class="tab-btn" data-tab="settings">設定</button>
+      </div>
+      <div class="site-title-wrap">
+        <h1 class="site-title">Re:Sound</h1>
+        <p class="site-sub">Song database · JPOP-LIST</p>
+      </div>
+      <div class="header-right">
+        <input id="search-input" class="search-input" placeholder="検索" />
+      </div>
+    </header>
+
+    <main>
+      <!-- TABLE VIEW -->
+      <section id="view-table" class="view active">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">楽曲一覧</div>
+              <div class="card-subtitle" id="table-subtitle">
+                評価, 曲名, 歌唱者, 制作者, カテゴリー, 関連作品
+              </div>
+            </div>
+            <div class="muted" id="table-summary">言語: 日本語</div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 50px;">評価</th>
+                  <th>曲名</th>
+                  <th>歌唱者</th>
+                  <th>制作者</th>
+                  <th>カテゴリー</th>
+                  <th>関連作品</th>
+                </tr>
+              </thead>
+              <tbody id="song-table-body">
+                <!-- rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-footer">
+            <div id="table-footer-info">0 曲</div>
+            <div class="pager">
+              <button id="pager-prev">&lt;</button>
+              <span id="pager-page">1 / 1</span>
+              <button id="pager-next">&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 10px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">楽曲詳細 / 新規楽曲追加</div>
+              <div class="card-subtitle">
+                行をクリックすると詳細情報が表示されます。表の外をクリックすると新しい楽曲の追加フォームが表示されます。
+              </div>
+            </div>
+            <div class="muted" id="detail-hint"></div>
+          </div>
+          <div id="song-detail-body">
+            <!-- JS에서 상세정보 또는 추가 폼 렌더 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS VIEW (placeholder) -->
+      <section id="view-stats" class="view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Stats (Skeleton)</div>
+              <div class="card-subtitle">
+                Genre / Artist / Tag distribution (to be implemented)
+              </div>
+            </div>
+          </div>
+          <p class="muted">
+            통계 탭의 레이아웃만 잡아둔 상태입니다. 나중에 장르 비율, 아티스트별 곡 수, 링크 누락 현황 등을 시각화할 수 있습니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- TAGS VIEW -->
+      <section id="view-tags" class="view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">タグマネージャー</div>
+              <div class="card-subtitle">
+                歌手 ｜ 制作者 ｜ カテゴリー ｜ 関連作品 タグを直接編集できるタブです。
+              </div>
+            </div>
+            <button id="btn-merge-tags" class="btn btn-primary">選択項目を統合</button>
+          </div>
+
+          <div class="tag-type-tabs">
+            <button class="tag-type-btn active" data-tag-type="artist">歌手</button>
+            <button class="tag-type-btn" data-tag-type="producer">制作者</button>
+            <button class="tag-type-btn" data-tag-type="genre">カテゴリー</button>
+            <button class="tag-type-btn" data-tag-type="media">関連作品</button>
+          </div>
+
+          <div class="tags-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>チェック</th>
+                  <th>タグ名</th>
+                  <th>エイリアス</th>
+                  <th>タイプ</th>
+                  <th style="width: 190px; text-align: right;">使用回数</th>
+                </tr>
+              </thead>
+              <tbody id="tags-table-body">
+                <!-- Tag rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+          <p class="muted" style="margin-top:6px;">
+            ※ ここで楽曲のタグを編集できます。
+          </p>
+        </div>
+      </section>
+
+      <!-- SETTINGS VIEW -->
+      <section id="view-settings" class="view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">設定</div>
+              <div class="card-subtitle">言語設定(거의 작동 안함)</div>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div>
+              <div class="chip-row" id="language-chips">
+                <button class="chip active" data-lang="jp">日本語 (JP)</button>
+                <button class="chip" data-lang="en">English (EN)</button>
+                <button class="chip" data-lang="kr">한국어 (KR)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+
+
+</body>
+</html>
