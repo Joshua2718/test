@@ -271,14 +271,12 @@ export function renderEditSongForm(song) {
   const genreText = (song.genreTagIds || []).map(getTagName).join(", ");
   const mediaText = (song.mediaTagIds || []).map(getTagName).join(", ");
 
-  const yt = song.link?.artist?.youtube || "";
-  const nico = song.link?.artist?.niconico || "";
-  const bili = song.link?.artist?.bilibili || "";
-
-  const artistLinks = (song.link && song.link.artistLinks) || {};
-  const artistYtText = (song.artistTagIds || []).map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.youtube || "")).join(", ");
-  const artistNicoText = (song.artistTagIds || []).map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.niconico || "")).join(", ");
-  const artistBiliText = (song.artistTagIds || []).map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.bilibili || "")).join(", ");
+  const artistTagIds = song.artistTagIds || [];
+  const artistLinks = song.link?.artistLinks || {};
+  
+  const artistYtText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.youtube || "")).join(", ");
+  const artistNicoText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.niconico || "")).join(", ");
+  const artistBiliText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.bilibili || "")).join(", ");
 
   const coverIds = song.coverTagIds || [];
   const coverLinks = (song.link && song.link.coverLinks) || {};
@@ -564,11 +562,6 @@ export function renderEditSongForm(song) {
 
     // 링크 업데이트
     song.link = song.link || {};
-    song.link.artist = {
-      youtube: yt_link,
-      niconico: nico_link,
-      bilibili: bili_link,
-    };
     song.link.artistLinks = {};
     const artistYtArr = artist_yt ? artist_yt.split(",").map((s) => s.trim()) : [];
     const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
