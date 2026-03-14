@@ -237,6 +237,7 @@ export function renderAddSongForm() {
           niconico: nico,
           bilibili: bili,
         };
+      });
     }
 
     const newSong = {
