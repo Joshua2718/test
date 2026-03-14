@@ -1,6 +1,6 @@
 // render.js
 import { db, state, saveDbToStorage } from './store.js';
-import { $, pruneUnusedTags, countTagUsed, getTagName, splitNameTokens, addTag, generateNextSongId } from './utils.js';
+import { $, pruneUnusedTags, countTagUsed, getTagName, splitNameTokens, addTag, refreshTagsViewIfActive, generateNextSongId } from './utils.js';
 import { compareSongs, getFilteredSongs } from './search.js';
 
 // ---------------------------
