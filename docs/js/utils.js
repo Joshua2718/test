@@ -1,5 +1,5 @@
 // utils.js
-import { db, state, saveDbToStorage } from './store.js';
+import { db, state, saveDbToStorage } from './db.js';
 /** DOM 선택자 단축 함수 */
 export function $(selector) {
   return document.querySelector(selector);
@@ -50,6 +50,13 @@ export function pruneUnusedTags() {
 export function getTagName(id) {
   const tag = db.tags[id];
   return tag ? tag.name : "(unknown)";
+}
+
+export function refreshTagsViewIfActive() {
+  if (state.currentTab === "tags") {
+    pruneUnusedTags();
+    renderTagsTable();
+  }
 }
 
 export function getTagAliases(id) {
