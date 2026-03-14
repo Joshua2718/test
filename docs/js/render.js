@@ -254,7 +254,7 @@ export function renderAddSongForm() {
       mediaTagIds,
       coverTagIds: [],
       link: {
-        artistLinks
+        artistLinks,
         coverLinks: {},
       },
     };
