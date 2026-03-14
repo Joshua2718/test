@@ -1,5 +1,5 @@
 // utils.js
-import { db, state, saveDbToStorage } from './db.js';
+import { db, state, saveDbToStorage } from './store.js';
 /** DOM 선택자 단축 함수 */
 export function $(selector) {
   return document.querySelector(selector);
@@ -52,16 +52,16 @@ export function getTagName(id) {
   return tag ? tag.name : "(unknown)";
 }
 
+export function getTagAliases(id) {
+  const tag = db.tags[id];
+  return tag && Array.isArray(tag.aliases) ? tag.aliases.join(", ") : "";
+}
+
 export function refreshTagsViewIfActive() {
   if (state.currentTab === "tags") {
     pruneUnusedTags();
     renderTagsTable();
   }
-}
-
-export function getTagAliases(id) {
-  const tag = db.tags[id];
-  return tag && Array.isArray(tag.aliases) ? tag.aliases.join(", ") : "";
 }
 
 /** 콤마와 콜라보레이션 '×' 기호 분리 */
