@@ -91,17 +91,17 @@ export function renderAddSongForm() {
 
       <div class="detail-field">
         <span class="detail-label">YouTube Link</span><br />
-        <input type="text" name="yt_link" class="input" />
+        <input type="text" name="artist_yt" class="input" />
       </div>
 
       <div class="detail-field">
         <span class="detail-label">Niconico Link</span><br />
-        <input type="text" name="nico_link" class="input" />
+        <input type="text" name="artist_nico" class="input" />
       </div>
 
       <div class="detail-field">
         <span class="detail-label">Bilibili Link</span><br />
-        <input type="text" name="bili_link" class="input" />
+        <input type="text" name="artist_bili" class="input" />
       </div>
 
       <div class="detail-actions">
@@ -129,9 +129,9 @@ export function renderAddSongForm() {
     const producer_names = (formData.get("producer_names") || "").toString().trim();
     const genre_names = (formData.get("genre_names") || "").toString().trim();
     const media_names = (formData.get("media_names") || "").toString().trim();
-    const yt_link = (formData.get("yt_link") || "").toString().trim();
-    const nico_link = (formData.get("nico_link") || "").toString().trim();
-    const bili_link = (formData.get("bili_link") || "").toString().trim();
+    const artist_yt = (formData.get("artist_yt") || "").toString().trim();
+    const artist_nico = (formData.get("artist_nico") || "").toString().trim();
+    const artist_bili = (formData.get("artist_bili") || "").toString().trim();
 
     // 최소한 JP/EN/KR 중 하나는 있어야 한다고 가정
     if (!title_jp && !title_en && !title_kr) {
@@ -221,6 +221,24 @@ export function renderAddSongForm() {
         });
     }
 
+    const artistLinks = {};
+    if (artist_names) {
+      const artistYtArr = artist_yt ? artist_yt.split(",").map((s) => s.trim()) : [];
+      const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
+      const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
+
+      artist_names.split(",").map((s) => s.trim()).filter(Boolean).forEach((block, idx) => {
+        const yt = artistYtArr[idx] || "";
+        const nico = artistNicoArr[idx] || "";
+        const bili = artistBiliArr[idx] || "";
+
+        artistLinks[block] = {
+          youtube: yt,
+          niconico: nico,
+          bilibili: bili,
+        };
+    }
+
     const newSong = {
       id: newId,
       rank: rank || "",
@@ -235,11 +253,7 @@ export function renderAddSongForm() {
       mediaTagIds,
       coverTagIds: [],
       link: {
-        artist: {
-          youtube: yt_link || "",
-          niconico: nico_link || "",
-          bilibili: bili_link || "",
-        },
+        artistLinks
         coverLinks: {},
       },
     };
@@ -259,230 +273,6 @@ export function renderAddSongForm() {
     renderSongDetail();
     refreshTagsViewIfActive();
   });
-}
-
-export function renderSongDetail() {
-  const container = $("#song-detail-body");
-  if (!container) return;
-
-  if (!state.selectedSongId) {
-    renderAddSongForm();
-    return;
-  }
-
-  const song = db.songs.find((s) => s.id === state.selectedSongId);
-  if (!song) {
-    container.innerHTML =
-      '<p class="muted">Selected song not found in DB.</p>';
-    return;
-  }
-
-  const title = song.title || {};
-  const artistNames = (song.artistTagIds || [[]]).map((collabNames) => collabNames.map(getTagName).join("×")).join(",");
-  const artistLinks = (song.link && song.link.artistLinks) || {};
-  const producerNames = (song.producerTagIds || [])
-    .map(getTagName)
-    .join(", ");
-  const genres = (song.genreTagIds || []).map(getTagName).join(", ");
-  const coverIds = song.coverTagIds || [];
-  const coverLinks = (song.link && song.link.coverLinks) || {};
-  const rankDisplay = "⭐️".repeat(song.rank) || "-";
-
-  const yt = song.link?.artist?.youtube || "";
-  const nico = song.link?.artist?.niconico || "";
-  const bili = song.link?.artist?.bilibili || "";
-
-  container.innerHTML = `
-    <div class="detail-grid">
-      <div>
-        <div class="detail-section-title">楽曲詳細</div>
-        <div class="detail-field">
-          <span class="detail-label">ID: </span>${song.id}
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">評価: </span>${rankDisplay}
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">曲名 (JP): </span>${title.jp || "-"}
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">曲名 (EN): </span>${title.en || "-"}
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">曲名 (KR): </span>${title.kr || "-"}
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">歌唱者: </span>
-          ${
-            (song.artistTagIds || []).length
-              ? (song.artistTagIds || [])
-                  .map((ids) => {
-                    const name = ids.map((id) => getTagName(id)).join("×");
-                    const links = artistLinks[name] || {};
-                    const parts = [];
-
-                    if (links.youtube) {
-                      parts.push(
-                        `<a href="${links.youtube}" target="_blank" rel="noopener noreferrer">YouTube</a>`
-                      );
-                    }
-                    if (links.niconico) {
-                      parts.push(
-                        `<a href="${links.niconico}" target="_blank" rel="noopener noreferrer">Niconico</a>`
-                      );
-                    }
-                    if (links.bilibili) {
-                      parts.push(
-                        `<a href="${links.bilibili}" target="_blank" rel="noopener noreferrer">Bilibili</a>`
-                      );
-                    }
-
-                    const linksText = parts.join(" / ") || "";
-                    return `<div class="cover-link-row">
-                              <span class="badge badge-artist">${name}</span>
-                               ${linksText}
-                            </div>`;
-                  })
-                  .join("")
-              : "-"
-          }
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">制作者: </span>${producerNames || "-"}
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">カテゴリー: </span>${genres || "-"}
-        </div>
-      </div>
-      <div>
-        <div class="detail-section-title">リンク & 関連作品</div>
-        <div class="detail-field link-row">
-          <span class="detail-label">YouTube: </span>
-          ${
-            yt
-              ? `<a href="${yt}" target="_blank" rel="noopener noreferrer">${yt}</a>`
-              : "-"
-          }
-        </div>
-        <div class="detail-field link-row">
-          <span class="detail-label">Niconico: </span>
-          ${
-            nico
-              ? `<a href="${nico}" target="_blank" rel="noopener noreferrer">${nico}</a>`
-              : "-"
-          }
-        </div>
-        <div class="detail-field link-row">
-          <span class="detail-label">Bilibili: </span>
-          ${
-            bili
-              ? `<a href="${bili}" target="_blank" rel="noopener noreferrer">${bili}</a>`
-              : "-"
-          }
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">関連作品: </span>
-          ${
-            (song.mediaTagIds || [])
-              .map((id) => `<span class="badge">${getTagName(id)}</span>`)
-              .join(" ") || "-"
-          }
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Cover 動画: </span>
-          ${
-            coverIds.length
-              ? coverIds
-                  .map((ids) => {
-                    const name = ids.map((id) => getTagName(id)).join("×");
-                    const links = coverLinks[name] || {};
-                    const parts = [];
-
-                    if (links.youtube) {
-                      parts.push(
-                        `<a href="${links.youtube}" target="_blank" rel="noopener noreferrer">YouTube</a>`
-                      );
-                    }
-                    if (links.niconico) {
-                      parts.push(
-                        `<a href="${links.niconico}" target="_blank" rel="noopener noreferrer">Niconico</a>`
-                      );
-                    }
-                    if (links.bilibili) {
-                      parts.push(
-                        `<a href="${links.bilibili}" target="_blank" rel="noopener noreferrer">Bilibili</a>`
-                      );
-                    }
-
-                    const linksText = parts.join(" / ") || "-";
-                    return `<div class="cover-link-row">
-                              <span class="badge badge-artist">${name}</span>
-                              &nbsp;${linksText}
-                            </div>`;
-                  })
-                  .join("")
-              : "-"
-          }
-        </div>
-      </div>
-    </div>
-    <div class="detail-actions">
-      <button id="song-edit-btn" class="btn btn-primary" type="button">編集</button>
-      <button id="song-delete-btn" class="btn btn-danger" type="button">削除</button>
-    </div>
-  `;
-
-  // Edit 버튼 → 편집 폼으로 전환
-  const editBtn = document.getElementById("song-edit-btn");
-  if (editBtn) {
-    editBtn.addEventListener("click", () => {
-      renderEditSongForm(song);
-    });
-  }
-
-  // Delete 구현
-  const deleteBtn = document.getElementById("song-delete-btn");
-  if (deleteBtn) {
-    deleteBtn.addEventListener("click", () => {
-      const titleStr =
-        title.jp || title.en || title.kr || "(no title)";
-      const ok = confirm(
-        `정말로 이 곡을 삭제할까요?\n\n[${song.id}] ${titleStr}`
-      );
-      if (!ok) return;
-
-      const idx = db.songs.findIndex((s) => s.id === song.id);
-      if (idx >= 0) {
-        db.songs.splice(idx, 1);
-        saveDbToStorage();
-      }
-
-      // 선택 곡 초기화
-      state.selectedSongId = null;
-
-      // 페이지 조정
-      const total = db.songs.length;
-      const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
-      if (state.currentSongPage > totalPages) state.currentSongPage = totalPages;
-
-      //ID 재부여
-        db.songs.forEach((song, index) => {
-          const newNum = index + 1; // 1부터 시작
-          const newId = `song_${String(newNum).padStart(6, "0")}`;
-          
-          // 만약 기존 ID와 다르다면 업데이트
-          if (song.id !== newId) {
-            song.id = newId;
-          }
-        });
-
-      saveDbToStorage();
-      pruneUnusedTags();
-      renderSongTable();
-      renderSongDetail();
-      refreshTagsViewIfActive();
-    });
-  }
 }
 
 export function renderEditSongForm(song) {
@@ -874,6 +664,230 @@ export function renderDetailArea() {
     renderSongDetail();
   } else {
     renderAddSongForm();
+  }
+}
+
+export function renderSongDetail() {
+  const container = $("#song-detail-body");
+  if (!container) return;
+
+  if (!state.selectedSongId) {
+    renderAddSongForm();
+    return;
+  }
+
+  const song = db.songs.find((s) => s.id === state.selectedSongId);
+  if (!song) {
+    container.innerHTML =
+      '<p class="muted">Selected song not found in DB.</p>';
+    return;
+  }
+
+  const title = song.title || {};
+  const artistNames = (song.artistTagIds || [[]]).map((collabNames) => collabNames.map(getTagName).join("×")).join(",");
+  const artistLinks = (song.link && song.link.artistLinks) || {};
+  const producerNames = (song.producerTagIds || [])
+    .map(getTagName)
+    .join(", ");
+  const genres = (song.genreTagIds || []).map(getTagName).join(", ");
+  const coverIds = song.coverTagIds || [];
+  const coverLinks = (song.link && song.link.coverLinks) || {};
+  const rankDisplay = "⭐️".repeat(song.rank) || "-";
+
+  const yt = song.link?.artist?.youtube || "";
+  const nico = song.link?.artist?.niconico || "";
+  const bili = song.link?.artist?.bilibili || "";
+
+  container.innerHTML = `
+    <div class="detail-grid">
+      <div>
+        <div class="detail-section-title">楽曲詳細</div>
+        <div class="detail-field">
+          <span class="detail-label">ID: </span>${song.id}
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">評価: </span>${rankDisplay}
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">曲名 (JP): </span>${title.jp || "-"}
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">曲名 (EN): </span>${title.en || "-"}
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">曲名 (KR): </span>${title.kr || "-"}
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">歌唱者: </span>
+          ${
+            (song.artistTagIds || []).length
+              ? (song.artistTagIds || [])
+                  .map((ids) => {
+                    const name = ids.map((id) => getTagName(id)).join("×");
+                    const links = artistLinks[name] || {};
+                    const parts = [];
+
+                    if (links.youtube) {
+                      parts.push(
+                        `<a href="${links.youtube}" target="_blank" rel="noopener noreferrer">YouTube</a>`
+                      );
+                    }
+                    if (links.niconico) {
+                      parts.push(
+                        `<a href="${links.niconico}" target="_blank" rel="noopener noreferrer">Niconico</a>`
+                      );
+                    }
+                    if (links.bilibili) {
+                      parts.push(
+                        `<a href="${links.bilibili}" target="_blank" rel="noopener noreferrer">Bilibili</a>`
+                      );
+                    }
+
+                    const linksText = parts.join(" / ") || "";
+                    return `<div class="cover-link-row">
+                              <span class="badge badge-artist">${name}</span>
+                               ${linksText}
+                            </div>`;
+                  })
+                  .join("")
+              : "-"
+          }
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">制作者: </span>${producerNames || "-"}
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">カテゴリー: </span>${genres || "-"}
+        </div>
+      </div>
+      <div>
+        <div class="detail-section-title">リンク & 関連作品</div>
+        <div class="detail-field link-row">
+          <span class="detail-label">YouTube: </span>
+          ${
+            yt
+              ? `<a href="${yt}" target="_blank" rel="noopener noreferrer">${yt}</a>`
+              : "-"
+          }
+        </div>
+        <div class="detail-field link-row">
+          <span class="detail-label">Niconico: </span>
+          ${
+            nico
+              ? `<a href="${nico}" target="_blank" rel="noopener noreferrer">${nico}</a>`
+              : "-"
+          }
+        </div>
+        <div class="detail-field link-row">
+          <span class="detail-label">Bilibili: </span>
+          ${
+            bili
+              ? `<a href="${bili}" target="_blank" rel="noopener noreferrer">${bili}</a>`
+              : "-"
+          }
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">関連作品: </span>
+          ${
+            (song.mediaTagIds || [])
+              .map((id) => `<span class="badge">${getTagName(id)}</span>`)
+              .join(" ") || "-"
+          }
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Cover 動画: </span>
+          ${
+            coverIds.length
+              ? coverIds
+                  .map((ids) => {
+                    const name = ids.map((id) => getTagName(id)).join("×");
+                    const links = coverLinks[name] || {};
+                    const parts = [];
+
+                    if (links.youtube) {
+                      parts.push(
+                        `<a href="${links.youtube}" target="_blank" rel="noopener noreferrer">YouTube</a>`
+                      );
+                    }
+                    if (links.niconico) {
+                      parts.push(
+                        `<a href="${links.niconico}" target="_blank" rel="noopener noreferrer">Niconico</a>`
+                      );
+                    }
+                    if (links.bilibili) {
+                      parts.push(
+                        `<a href="${links.bilibili}" target="_blank" rel="noopener noreferrer">Bilibili</a>`
+                      );
+                    }
+
+                    const linksText = parts.join(" / ") || "-";
+                    return `<div class="cover-link-row">
+                              <span class="badge badge-artist">${name}</span>
+                              &nbsp;${linksText}
+                            </div>`;
+                  })
+                  .join("")
+              : "-"
+          }
+        </div>
+      </div>
+    </div>
+    <div class="detail-actions">
+      <button id="song-edit-btn" class="btn btn-primary" type="button">編集</button>
+      <button id="song-delete-btn" class="btn btn-danger" type="button">削除</button>
+    </div>
+  `;
+
+  // Edit 버튼 → 편집 폼으로 전환
+  const editBtn = document.getElementById("song-edit-btn");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      renderEditSongForm(song);
+    });
+  }
+
+  // Delete 구현
+  const deleteBtn = document.getElementById("song-delete-btn");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", () => {
+      const titleStr =
+        title.jp || title.en || title.kr || "(no title)";
+      const ok = confirm(
+        `정말로 이 곡을 삭제할까요?\n\n[${song.id}] ${titleStr}`
+      );
+      if (!ok) return;
+
+      const idx = db.songs.findIndex((s) => s.id === song.id);
+      if (idx >= 0) {
+        db.songs.splice(idx, 1);
+        saveDbToStorage();
+      }
+
+      // 선택 곡 초기화
+      state.selectedSongId = null;
+
+      // 페이지 조정
+      const total = db.songs.length;
+      const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+      if (state.currentSongPage > totalPages) state.currentSongPage = totalPages;
+
+      //ID 재부여
+        db.songs.forEach((song, index) => {
+          const newNum = index + 1; // 1부터 시작
+          const newId = `song_${String(newNum).padStart(6, "0")}`;
+          
+          // 만약 기존 ID와 다르다면 업데이트
+          if (song.id !== newId) {
+            song.id = newId;
+          }
+        });
+
+      saveDbToStorage();
+      pruneUnusedTags();
+      renderSongTable();
+      renderSongDetail();
+      refreshTagsViewIfActive();
+    });
   }
 }
 
