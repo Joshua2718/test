@@ -236,8 +236,8 @@ export function renderAddSongForm() {
           youtube: yt,
           niconico: nico,
           bilibili: bili,
-        };
-      });
+         };
+       });
     }
 
     const newSong = {
