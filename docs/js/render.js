@@ -212,7 +212,7 @@ export function renderAddSongForm() {
       const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
       const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
 
-      splitNameTokens(artist_names).map((s) => s.join("×")).forEach((block, idx) => {
+      splitNameTokens(artist_names).map((s) => s.join(" × ")).forEach((block, idx) => {
         const yt = artistYtArr[idx] || "";
         const nico = artistNicoArr[idx] || "";
         const bili = artistBiliArr[idx] || "";
@@ -274,17 +274,17 @@ export function renderEditSongForm(song) {
   const artistTagIds = song.artistTagIds || [];
   const artistLinks = song.link?.artistLinks || {};
   
-  const artistYtText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.youtube || "")).join(", ");
-  const artistNicoText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.niconico || "")).join(", ");
-  const artistBiliText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join("×")]?.bilibili || "")).join(", ");
+  const artistYtText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join(" × ")]?.youtube || "")).join(", ");
+  const artistNicoText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join(" × ")]?.niconico || "")).join(", ");
+  const artistBiliText = artistTagIds.map((ids) => (artistLinks[ids.map(getTagName).join(" × ")]?.bilibili || "")).join(", ");
 
   const coverIds = song.coverTagIds || [];
   const coverLinks = (song.link && song.link.coverLinks) || {};
 
   const coverNamesText = coverIds.map((ids) => ids.map(getTagName).join(" × ")).join(", ");
-  const coverYtText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join("×")]?.youtube || "")).join(", ");
-  const coverNicoText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join("×")]?.niconico || "")).join(", ");
-  const coverBiliText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join("×")]?.bilibili || "")).join(", ");
+  const coverYtText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join(" × ")]?.youtube || "")).join(", ");
+  const coverNicoText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join(" × ")]?.niconico || "")).join(", ");
+  const coverBiliText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join(" × ")]?.bilibili || "")).join(", ");
 
   container.innerHTML = `
     <form id="edit-song-form" class="add-song-form">
@@ -562,23 +562,21 @@ export function renderEditSongForm(song) {
     // 링크 업데이트
     song.link = song.link || {};
     song.link.artistLinks = {};
-    if (artist_names) {
-      const artistYtArr = artist_yt ? artist_yt.split(",").map((s) => s.trim()) : [];
-      const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
-      const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
+    const artistYtArr = artist_yt ? artist_yt.split(",").map((s) => s.trim()) : [];
+    const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
+    const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
 
-      splitNameTokens(artist_names).map((s) => s.join("×")).forEach((block, idx) => {
-        const yt = artistYtArr[idx] || "";
-        const nico = artistNicoArr[idx] || "";
-        const bili = artistBiliArr[idx] || "";
+    splitNameTokens(artist_names).map((s) => s.join(" × ")).forEach((block, idx) => {
+      const yt = artistYtArr[idx] || "";
+      const nico = artistNicoArr[idx] || "";
+      const bili = artistBiliArr[idx] || "";
 
-        artistLinks[block] = {
-          youtube: yt,
-          niconico: nico,
-          bilibili: bili,
-         };
-       });
-    }
+      song.link.artistLinks[block] = {
+        youtube: yt,
+        niconico: nico,
+        bilibili: bili,
+      };
+    });
 
     song.link.coverLinks = song.link.coverLinks || {};
 
@@ -604,7 +602,7 @@ export function renderEditSongForm(song) {
     const coverBiliArr = cover_bili ? cover_bili.split(",").map((s) => s.trim()) : [];
 
     song.link.coverLinks = {};
-    splitNameTokens(cover_names).map((s) => s.join("×")).forEach((block, idx) => {
+    splitNameTokens(cover_names).map((s) => s.join(" × ")).forEach((block, idx) => {
       const yt = coverYtArr[idx] || "";
       const nico = coverNicoArr[idx] || "";
       const bili = coverBiliArr[idx] || "";
