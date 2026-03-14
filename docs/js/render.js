@@ -266,7 +266,7 @@ export function renderEditSongForm(song) {
   if (!container) return;
 
   const title = song.title || {};
-  const artistText = (song.artistTagIds || [[]]).map((collabNames) => collabNames.map(getTagName).join("×")).join(", ");
+  const artistText = (song.artistTagIds || [[]]).map((collabNames) => collabNames.map(getTagName).join(" × ")).join(", ");
   const producerText = (song.producerTagIds || []).map(getTagName).join(", ");
   const genreText = (song.genreTagIds || []).map(getTagName).join(", ");
   const mediaText = (song.mediaTagIds || []).map(getTagName).join(", ");
@@ -281,7 +281,7 @@ export function renderEditSongForm(song) {
   const coverIds = song.coverTagIds || [];
   const coverLinks = (song.link && song.link.coverLinks) || {};
 
-  const coverNamesText = coverIds.map((ids) => ids.map(getTagName).join("×")).join(", ");
+  const coverNamesText = coverIds.map((ids) => ids.map(getTagName).join(" × ")).join(", ");
   const coverYtText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join("×")]?.youtube || "")).join(", ");
   const coverNicoText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join("×")]?.niconico || "")).join(", ");
   const coverBiliText = coverIds.map((ids) => (coverLinks[ids.map(getTagName).join("×")]?.bilibili || "")).join(", ");
