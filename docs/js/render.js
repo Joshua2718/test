@@ -512,7 +512,6 @@ export function renderEditSongForm(song) {
     splitNameTokens(artist_names).forEach((collabNames) => {
       const collabIds = collabNames.map((name) => addTag(name, "artist")).filter(Boolean);
       if (collabIds.length > 0) {
-        console.log(collabIds);
         artistTagIds.push(collabIds); // 콜라보 단위로 push
       }
     });
