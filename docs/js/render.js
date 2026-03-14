@@ -212,7 +212,7 @@ export function renderAddSongForm() {
       const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
       const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
 
-      artist_names.split(",").map((s) => s.trim()).filter(Boolean).forEach((block, idx) => {
+      splitNameTokens(artist_names).map((s) => s.join("×")).forEach((block, idx) => {
         const yt = artistYtArr[idx] || "";
         const nico = artistNicoArr[idx] || "";
         const bili = artistBiliArr[idx] || "";
@@ -562,21 +562,23 @@ export function renderEditSongForm(song) {
     // 링크 업데이트
     song.link = song.link || {};
     song.link.artistLinks = {};
-    const artistYtArr = artist_yt ? artist_yt.split(",").map((s) => s.trim()) : [];
-    const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
-    const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
+    if (artist_names) {
+      const artistYtArr = artist_yt ? artist_yt.split(",").map((s) => s.trim()) : [];
+      const artistNicoArr = artist_nico ? artist_nico.split(",").map((s) => s.trim()) : [];
+      const artistBiliArr = artist_bili ? artist_bili.split(",").map((s) => s.trim()) : [];
 
-    artist_names.split(",").map((s) => s.trim()).filter(Boolean).forEach((block, idx) => {
-      const yt = artistYtArr[idx] || "";
-      const nico = artistNicoArr[idx] || "";
-      const bili = artistBiliArr[idx] || "";
+      splitNameTokens(artist_names).map((s) => s.join("×")).forEach((block, idx) => {
+        const yt = artistYtArr[idx] || "";
+        const nico = artistNicoArr[idx] || "";
+        const bili = artistBiliArr[idx] || "";
 
-      song.link.artistLinks[block] = {
-        youtube: yt,
-        niconico: nico,
-        bilibili: bili,
-      };
-    });
+        artistLinks[block] = {
+          youtube: yt,
+          niconico: nico,
+          bilibili: bili,
+         };
+       });
+    }
 
     song.link.coverLinks = song.link.coverLinks || {};
 
@@ -602,7 +604,7 @@ export function renderEditSongForm(song) {
     const coverBiliArr = cover_bili ? cover_bili.split(",").map((s) => s.trim()) : [];
 
     song.link.coverLinks = {};
-    cover_names.split(",").map((s) => s.trim()).filter(Boolean).forEach((block, idx) => {
+    splitNameTokens(cover_names).map((s) => s.join("×")).forEach((block, idx) => {
       const yt = coverYtArr[idx] || "";
       const nico = coverNicoArr[idx] || "";
       const bili = coverBiliArr[idx] || "";
