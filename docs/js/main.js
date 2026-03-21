@@ -13,26 +13,91 @@ function checkInitialData() {
     const s1 = {
       id: generateNextSongId(),
       rank: 5,
-      title: { jp: "夜に駆ける", en: "Racing into the Night", kr: "밤을 달리다" },
-      artistTagIds: [[addTag("YOASOBI", "artist")]],
-      producerTagIds: [addTag("Ayase", "producer")],
-      genreTagIds: [addTag("J-POP", "genre")],
+      title: {
+        jp: "帝国少女",
+        en: "Imperial Girl",
+        kr: "제국소녀"
+      },
+      artistTagIds: [[addTag("Hatsune Miku", "artist")]],
+      producerTagIds: [addTag("R Sound Design", "producer")],
+      genreTagIds: [addTag("Vocaloid", "genre")],
       mediaTagIds: [],
-      yt_link: "https://www.youtube.com/watch?v=by4SYYWlhEs"
+      coverTagIds: [[addTag("Sawako", "artist")]],
+      link: {
+        artistLinks: {
+          "Hatsune Miku":{
+            "youtube":"https://youtu.be/hUaVxNUCbc4",
+            "niconico":"https://www.nicovideo.jp/watch/sm30788596",
+            "bilibili":""
+          }
+        },
+        coverLinks: {
+          "Sawako":{
+            "youtube":"https://youtu.be/2EIc8ETpoYA",
+            "niconico":"https://sp.nicovideo.jp/watch/sm33240339",
+            "bilibili":"https://www.bilibili.com/video/BV1Cx411h7ud"
+          },
+        },
     };
     db.songs.push(s1);
 
     const s2 = {
-      id: generateNextSongId(),
-      rank: 4,
-      title: { jp: "アイドル", en: "Idol", kr: "아이돌" },
-      artistTagIds: [[addTag("YOASOBI", "artist")]],
-      producerTagIds: [addTag("Ayase", "producer")],
-      genreTagIds: [addTag("J-POP", "genre"), addTag("Anime", "genre")],
-      mediaTagIds: [addTag("【推しの子】", "media")],
-      yt_link: "https://www.youtube.com/watch?v=ZRtdQ81jPUQ"
+      "id": generateNextSongId(),
+      "rank": 5,
+      "title": {
+        "jp": "This game",
+        "en": "This game",
+        "kr": "This game"
+      },
+      "artistTagIds": [[addTag("Suzuki Konomi", "artist")]],
+      "producerTagIds": [],
+      "genreTagIds": [],
+      "mediaTagIds": [[addTag("No Game No Life", "media")]],
+      "coverTagIds": [],
+      "link": {
+        "artistLinks": {
+          "Suzuki Konomi": {
+            "youtube": "https://youtu.be/kJ04dMmimn8",
+            "niconico": "",
+            "bilibili": ""
+          }
+        },
+        "coverLinks": {}
+      }
     };
     db.songs.push(s2);
+
+    const s3 = {
+      "id": generateNextSongId(),
+      "rank": 5,
+      "title": {
+        "jp": "true my heart",
+        "en": "true my heart",
+        "kr": "true my heart"
+      },
+      "artistTagIds": [[addTag("Sakura Saori", "artist")]],
+      "producerTagIds": [[addTag("ave;new", "producer")]],
+      "genreTagIds": [
+        [addTag("denpa song", "genre")],
+        [addTag("character song", "genre")],
+      ],
+      "mediaTagIds": [
+        [addTag("Nursery Rhyme", "media")],
+        [addTag("Saekano", "media")],
+      ],
+      "coverTagIds": [],
+      "link": {
+        "artistLinks": {
+          "Sakura Saori": {
+            "youtube": "",
+            "niconico": "",
+            "bilibili": ""
+          }
+        },
+        "coverLinks": {}
+      }
+    };
+    db.songs.push(s3);
 
     saveDbToStorage();
   }
