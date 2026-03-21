@@ -52,7 +52,7 @@ function checkInitialData() {
       },
       "artistTagIds": [[addTag("Suzuki Konomi", "artist")]],
       "producerTagIds": [],
-      "genreTagIds": [],
+      "genreTagIds": [addTag("Anime Song", "genre")],
       "mediaTagIds": [addTag("No Game No Life", "media")],
       "coverTagIds": [],
       "link": {
@@ -80,6 +80,7 @@ function checkInitialData() {
       "producerTagIds": [addTag("ave;new", "producer")],
       "genreTagIds": [
         addTag("denpa song", "genre"),
+        addTag("Anime Song", "genre"),
         addTag("character song", "genre"),
       ],
       "mediaTagIds": [
