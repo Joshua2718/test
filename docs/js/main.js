@@ -53,7 +53,7 @@ function checkInitialData() {
       "artistTagIds": [[addTag("Suzuki Konomi", "artist")]],
       "producerTagIds": [],
       "genreTagIds": [],
-      "mediaTagIds": [[addTag("No Game No Life", "media")]],
+      "mediaTagIds": [addTag("No Game No Life", "media")],
       "coverTagIds": [],
       "link": {
         "artistLinks": {
@@ -77,14 +77,14 @@ function checkInitialData() {
         "kr": "true my heart"
       },
       "artistTagIds": [[addTag("Sakura Saori", "artist")]],
-      "producerTagIds": [[addTag("ave;new", "producer")]],
+      "producerTagIds": [addTag("ave;new", "producer")],
       "genreTagIds": [
-        [addTag("denpa song", "genre")],
-        [addTag("character song", "genre")],
+        addTag("denpa song", "genre"),
+        addTag("character song", "genre"),
       ],
       "mediaTagIds": [
-        [addTag("Nursery Rhyme", "media")],
-        [addTag("Saekano", "media")],
+        addTag("Nursery Rhyme", "media"),
+        addTag("Saekano", "media"),
       ],
       "coverTagIds": [],
       "link": {
