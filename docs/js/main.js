@@ -38,6 +38,7 @@ function checkInitialData() {
             "bilibili":"https://www.bilibili.com/video/BV1Cx411h7ud"
           },
         },
+      }
     };
     db.songs.push(s1);
 
